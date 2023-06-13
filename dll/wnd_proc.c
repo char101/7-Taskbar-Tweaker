@@ -2400,6 +2400,8 @@ static LRESULT CALLBACK NewTaskListProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 	static BOOL bControllingContextMenu = FALSE;
 	static BOOL bImmediateTooltip = FALSE;
 	static DWORD dwLastWheelMinimizeTickCount, dwLastWheelRestoreTickCount;
+	static BOOL bMouseTracking = FALSE;
+	static BOOL bEnableThumbnailHover = TRUE;
 	LONG_PTR lpMMTaskListLongPtr;
 	int nOption;
 	DWORD dwOldUserPrefSetBits, dwOldUserPrefRemoveBits;
@@ -2428,6 +2430,7 @@ static LRESULT CALLBACK NewTaskListProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 	case WM_XBUTTONDBLCLK:
 		lpMMTaskListLongPtr = GetWindowLongPtr(hWnd, 0);
 		bProcessed = FALSE;
+		bEnableThumbnailHover = FALSE;
 
 		nDoubleClickOption = 0;
 
@@ -2799,6 +2802,7 @@ static LRESULT CALLBACK NewTaskListProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 		break;
 
 	case WM_CONTEXTMENU:
+		bEnableThumbnailHover = FALSE;
 		if(!bControllingContextMenu && nOptions[OPT_RCLICK] == 1 && !bGetKeyStateHooked)
 		{
 			bGetKeyStateHooked = TRUE;
@@ -2828,6 +2832,17 @@ static LRESULT CALLBACK NewTaskListProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 		break;
 
 	case WM_MOUSEMOVE:
+		if(!bMouseTracking)
+		{
+			// Enable mouse tracking.
+			TRACKMOUSEEVENT tme;
+			tme.cbSize = sizeof(tme);
+			tme.hwndTrack = hWnd;
+			tme.dwFlags = TME_HOVER | TME_LEAVE;
+			tme.dwHoverTime = 100; //HOVER_DEFAULT;
+			TrackMouseEvent(&tme);
+			bMouseTracking = TRUE;
+		}
 		lpMMTaskListLongPtr = GetWindowLongPtr(hWnd, 0);
 
 		ComFuncTaskListBeforeMouseMove();
@@ -2873,6 +2888,16 @@ static LRESULT CALLBACK NewTaskListProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 		break;
 
 	case WM_MOUSEHOVER:
+		bMouseTracking = FALSE;
+
+		if(bEnableThumbnailHover)
+		{
+			lpMMTaskListLongPtr = GetWindowLongPtr(hWnd, 0);
+			result = DefWindowProc(hWnd, uMsg, wParam, lParam);
+			OpenThumbnailPreview(lpMMTaskListLongPtr);
+			break;
+		}
+
 		if(nOptions[OPT_HOVER] == 2) // Tooltip
 		{
 			lpMMTaskListLongPtr = GetWindowLongPtr(hWnd, 0);
@@ -2891,6 +2916,8 @@ static LRESULT CALLBACK NewTaskListProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 		break;
 
 	case WM_MOUSELEAVE:
+		bMouseTracking = FALSE;
+		bEnableThumbnailHover = TRUE;
 		ComFuncTaskListMouseLeave();
 
 		result = DefSubclassProc(hWnd, uMsg, wParam, lParam);

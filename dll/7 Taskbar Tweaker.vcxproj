@@ -167,7 +167,7 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>comctl32.lib;shlwapi.lib;uxtheme.lib;dwmapi.lib;version.lib;wininet.lib;dbghelp.lib;MinHook/libMinHook.x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;shlwapi.lib;uxtheme.lib;dwmapi.lib;version.lib;wininet.lib;dbghelp.lib;MinHook/libMinHook.x64-01.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>_exports.def</ModuleDefinitionFile>
       <GenerateMapFile>true</GenerateMapFile>
       <DelayLoadDLLs>
@@ -192,7 +192,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>comctl32.lib;shlwapi.lib;uxtheme.lib;dwmapi.lib;version.lib;wininet.lib;dbghelp.lib;MinHook/libMinHook.x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;shlwapi.lib;uxtheme.lib;dwmapi.lib;version.lib;wininet.lib;dbghelp.lib;MinHook/libMinHook.x64-01.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>_exports.def</ModuleDefinitionFile>
       <GenerateMapFile>true</GenerateMapFile>
       <DelayLoadDLLs>
